@@ -1,11 +1,15 @@
 'use strict';
 
+const PIN_WIDTH = 50;
+const PIN_HEIGHT = 70;
+
 const ADVERTISEMENT_INFO = {
   quantity: 8,
-  avatar: ['01', '02', '03', '04', '05', '06', '07', '08'],
   title: ['Заголовок1', 'Заголовок2', 'Заголовок3', 'Заголовок4', 'Заголовок5', 'Заголовок6', 'Заголовок7', 'Заголовок8'],
-  adress: ['600, 350', '610, 300', '620, 310', '630, 320', '640, 340', '600, 380', '610, 350', '690, 300'],
-  price: [10, 20, 30, 40, 50, 60, 70, 80],
+  price: {
+    min: 1000,
+    max: 100000
+  },
   type: ['palace', 'flat', 'house', 'bungalow'],
   rooms: {
     min: 1,
@@ -34,30 +38,56 @@ const getRandomInt = (min, max) => {
   return Math.floor(Math.random() * (max - min)) + min;
 };
 
-const renderAdvertisement = (ADVERTISEMENT_INFO) => {
-  let Advertisements = [];
-  for (let i = 0; i < ADVERTISEMENT_INFO.quantity; i++) {
-    Advertisements[i] = {
+const renderAdvertisements = (info) => {
+  let advertisements = [];
+  for (let i = 0; i < info.quantity; i++) {
+    const locationX = getRandomInt(0, 1200);
+    const locationY = getRandomInt(130, 630);
+    advertisements[i] = {
       author: {
-        avatar: `img/avatars/user${ADVERTISEMENT_INFO.avatar[i]}.png`
+        avatar: `img/avatars/user0${i + 1}.png`
       },
       offer: {
-        title: ADVERTISEMENT_INFO.title[i],
-        adress: ADVERTISEMENT_INFO.adress[i],
-        price: ADVERTISEMENT_INFO.price[i],
-        type: ADVERTISEMENT_INFO.type[getRandomInt(0, ADVERTISEMENT_INFO.type.length)], // length - 1?
-        rooms: getRandomInt(ADVERTISEMENT_INFO.rooms.min, ADVERTISEMENT_INFO.rooms.max),
-        guests: getRandomInt(ADVERTISEMENT_INFO.guests.min, ADVERTISEMENT_INFO.guests.max),
-        checkin: ADVERTISEMENT_INFO.checkin[getRandomInt(0, ADVERTISEMENT_INFO.checkin.length)],
-        checkout: ADVERTISEMENT_INFO.checkout[getRandomInt(0, ADVERTISEMENT_INFO.checkout.length)],
-        features: ADVERTISEMENT_INFO.features.slice(0, getRandomInt(0, ADVERTISEMENT_INFO.features.length - 1)),
-        description: ADVERTISEMENT_INFO.description[i],
-        photos: ADVERTISEMENT_INFO.photos[getRandomInt(0, ADVERTISEMENT_INFO.photos.length)]
+        title: info.title[i],
+        adress: `${locationX}, ${locationY}`,
+        price: getRandomInt(info.price.min, info.price.max),
+        type: info.type[getRandomInt(0, info.type.length)],
+        rooms: getRandomInt(info.rooms.min, info.rooms.max),
+        guests: getRandomInt(info.guests.min, info.guests.max),
+        checkin: info.checkin[getRandomInt(0, info.checkin.length)],
+        checkout: info.checkout[getRandomInt(0, info.checkout.length)],
+        features: info.features.slice(0, getRandomInt(0, info.features.length)),
+        description: info.description[i],
+        photos: info.photos.slice(0, getRandomInt(0, info.photos.length))
       },
       location: {
-        x: getRandomInt(0, 1200), // ???
-        y: getRandomInt(130, 630)
+        x: locationX,
+        y: locationY
       }
     };
   }
+  return advertisements;
 };
+
+const renderOnePin = (element) => {
+  const pinElement = mapOnePin.cloneNode(true);
+
+  pinElement.style.left = `${element.location.x + PIN_WIDTH / 2}px`;
+  pinElement.style.top = `${element.location.y + PIN_HEIGHT}px`;
+  pinElement.querySelector('img').src = element.author.avatar;
+  pinElement.querySelector('img').alt = element.offer.title;
+
+  return pinElement;
+};
+
+const renderPins = () => {
+  const fragment = document.createDocumentFragment();
+  const pinsArray = renderAdvertisements(ADVERTISEMENT_INFO);
+  for (let i = 0; i < ADVERTISEMENT_INFO.quantity; i++) {
+    fragment.appendChild(renderOnePin(pinsArray[i]));
+  }
+
+  mapPins.appendChild(fragment);
+};
+
+renderPins();
