@@ -9,7 +9,12 @@ const ADVERTISEMENT_INFO = {
     min: 1000,
     max: 100000
   },
-  type: ['palace', 'flat', 'house', 'bungalow'],
+  type: {
+    flat: 'Квартира',
+    bungalow: 'Бунгало',
+    house: 'Дом',
+    palace: 'Дворец'
+  },
   rooms: {
     min: 1,
     max: 5
@@ -47,7 +52,7 @@ const renderAdvertisements = (info) => {
       },
       offer: {
         title: `Заголовок-${i + 1}`,
-        adress: `${locationX}, ${locationY}`,
+        address: `${locationX}, ${locationY}`,
         price: getRandomInt(info.price.min, info.price.max),
         type: info.type[getRandomInt(0, info.type.length)],
         rooms: getRandomInt(info.rooms.min, info.rooms.max),
@@ -89,3 +94,30 @@ const renderPins = () => {
 };
 
 renderPins();
+
+const mapFiltersContainer = document.querySelector('.map__filters-container');
+const mapOneCard = document.querySelector('#card').content.querySelector('.map__card');
+
+const renderOneCard = (card) => {
+  const cardElement = mapOneCard.cloneNode(true);
+
+  cardElement.querySelector('.popup__title').textContent = card.offer.title;
+  cardElement.querySelector('.popup__text--address').textContent = card.offer.address;
+  cardElement.querySelector('.popup__text--price').textContent = `${card.offer.price}₽/ночь`;
+  cardElement.querySelector('.popup__type').textContent = card.offer.type;
+  cardElement.querySelector('.popup__text--capacity').textContent = `${card.offer.rooms} комнаты для ${card.offer.guests} гостей`;
+  cardElement.querySelector('.popup__text--time').textContent = `Заезд после ${card.offer.checkin}, выезд до ${card.offer.checkout}`;
+
+  return cardElement;
+};
+
+const renderCards = () => {
+  const cards = renderAdvertisements(ADVERTISEMENT_INFO);
+  const fragmentCard = document.createDocumentFragment();
+
+  fragmentCard.appendChild(renderOneCard(cards[0]));
+
+  map.insertBefore(fragmentCard, mapFiltersContainer);
+};
+
+renderCards();
