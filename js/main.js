@@ -5,7 +5,6 @@ const PIN_HEIGHT = 70;
 
 const ADVERTISEMENT_INFO = {
   quantity: 8,
-  title: ['Заголовок1', 'Заголовок2', 'Заголовок3', 'Заголовок4', 'Заголовок5', 'Заголовок6', 'Заголовок7', 'Заголовок8'],
   price: {
     min: 1000,
     max: 100000
@@ -22,7 +21,6 @@ const ADVERTISEMENT_INFO = {
   checkin: ['12:00', '13:00', '14:00'],
   checkout: ['12:00', '13:00', '14:00'],
   features: ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'],
-  description: ['Описание1', 'Описание2', 'Описание3', 'Описание4', 'Описание5', 'Описание6', 'Описание7', 'Описание8'],
   photos: ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg']
 };
 
@@ -48,7 +46,7 @@ const renderAdvertisements = (info) => {
         avatar: `img/avatars/user0${i + 1}.png`
       },
       offer: {
-        title: info.title[i],
+        title: `Заголовок-${i + 1}`,
         adress: `${locationX}, ${locationY}`,
         price: getRandomInt(info.price.min, info.price.max),
         type: info.type[getRandomInt(0, info.type.length)],
@@ -57,7 +55,7 @@ const renderAdvertisements = (info) => {
         checkin: info.checkin[getRandomInt(0, info.checkin.length)],
         checkout: info.checkout[getRandomInt(0, info.checkout.length)],
         features: info.features.slice(0, getRandomInt(0, info.features.length)),
-        description: info.description[i],
+        description: `Описание-${i + 1}`,
         photos: info.photos.slice(0, getRandomInt(0, info.photos.length))
       },
       location: {
@@ -72,8 +70,8 @@ const renderAdvertisements = (info) => {
 const renderOnePin = (element) => {
   const pinElement = mapOnePin.cloneNode(true);
 
-  pinElement.style.left = `${element.location.x + PIN_WIDTH / 2}px`;
-  pinElement.style.top = `${element.location.y + PIN_HEIGHT}px`;
+  pinElement.style.left = `${element.location.x - PIN_WIDTH / 2}px`;
+  pinElement.style.top = `${element.location.y - PIN_HEIGHT}px`;
   pinElement.querySelector('img').src = element.author.avatar;
   pinElement.querySelector('img').alt = element.offer.title;
 
@@ -83,7 +81,7 @@ const renderOnePin = (element) => {
 const renderPins = () => {
   const fragment = document.createDocumentFragment();
   const pinsArray = renderAdvertisements(ADVERTISEMENT_INFO);
-  for (let i = 0; i < ADVERTISEMENT_INFO.quantity; i++) {
+  for (let i = 0; i < pinsArray.length; i++) {
     fragment.appendChild(renderOnePin(pinsArray[i]));
   }
 
