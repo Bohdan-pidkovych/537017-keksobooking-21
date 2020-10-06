@@ -84,13 +84,13 @@ const renderOnePin = (element) => {
 };
 
 const renderPins = () => {
-  const fragment = document.createDocumentFragment();
+  const pinFragment = document.createDocumentFragment();
   const pinsArray = renderAdvertisements(ADVERTISEMENT_INFO);
   for (let i = 0; i < pinsArray.length; i++) {
-    fragment.appendChild(renderOnePin(pinsArray[i]));
+    pinFragment.appendChild(renderOnePin(pinsArray[i]));
   }
 
-  mapPins.appendChild(fragment);
+  mapPins.appendChild(pinFragment);
 };
 
 renderPins();
@@ -100,6 +100,9 @@ const mapOneCard = document.querySelector('#card').content.querySelector('.map__
 
 const renderOneCard = (card) => {
   const cardElement = mapOneCard.cloneNode(true);
+  const photoTemplate = cardElement.querySelector('.popup__photo');
+  const photos = cardElement.querySelector('.popup__photos');
+  const popupFeatures = cardElement.querySelectorAll('.popup__feature');
 
   cardElement.querySelector('.popup__title').textContent = card.offer.title;
   cardElement.querySelector('.popup__text--address').textContent = card.offer.address;
@@ -107,17 +110,38 @@ const renderOneCard = (card) => {
   cardElement.querySelector('.popup__type').textContent = card.offer.type;
   cardElement.querySelector('.popup__text--capacity').textContent = `${card.offer.rooms} комнаты для ${card.offer.guests} гостей`;
   cardElement.querySelector('.popup__text--time').textContent = `Заезд после ${card.offer.checkin}, выезд до ${card.offer.checkout}`;
+  cardElement.querySelector('.popup__description').textContent = card.offer.description;
+
+  for (let i = 0; i < card.offer.photos.length; i++) {
+    const photo = photoTemplate.cloneNode(true);
+
+    photo.src = card.offer.photos[i];
+    photos.appendChild(photo);
+  }
+
+  photos.removeChild(photoTemplate);
+
+  for (let i = 0; i < popupFeatures.length; i++) {
+    popupFeatures[i].remove();
+  }
+
+  for (let i = 0; i < card.offer.features.length; i++) {
+    const featureItem = document.createElement('li');
+    featureItem.classList.add('popup__feature');
+    featureItem.classList.add(`popup__feature--${card.offer.features[i]}`);
+    cardElement.querySelector('.popup__features').appendChild(featureItem);
+  }
 
   return cardElement;
 };
 
 const renderCards = () => {
   const cards = renderAdvertisements(ADVERTISEMENT_INFO);
-  const fragmentCard = document.createDocumentFragment();
+  const cardFragment = document.createDocumentFragment();
 
-  fragmentCard.appendChild(renderOneCard(cards[0]));
+  cardFragment.appendChild(renderOneCard(cards[0]));
 
-  map.insertBefore(fragmentCard, mapFiltersContainer);
+  map.insertBefore(cardFragment, mapFiltersContainer);
 };
 
 renderCards();
