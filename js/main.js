@@ -85,119 +85,120 @@ const renderOnePin = (element) => {
   return pinElement;
 };
 
-const renderPins = () => {
+const pinsArray = renderAdvertisements(ADVERTISEMENT_INFO);
+
+const renderPins = (array) => {
   const pinFragment = document.createDocumentFragment();
-  const pinsArray = renderAdvertisements(ADVERTISEMENT_INFO);
-  for (let i = 0; i < pinsArray.length; i++) {
+  for (let i = 0; i < array.length; i++) {
     pinFragment.appendChild(renderOnePin(pinsArray[i]));
   }
 
   mapPins.appendChild(pinFragment);
 };
 
-renderPins();
+renderPins(pinsArray);
 
 const mapFiltersContainer = document.querySelector('.map__filters-container');
-const mapOneCard = document.querySelector('#card').content.querySelector('.map__card');
+const mapCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 
-const renderOneCard = (card) => {
-  const cardElement = mapOneCard.cloneNode(true);
-  const photoTemplate = cardElement.querySelector('.popup__photo');
+const renderPhotos = (element, card) => {
+  const photoTemplate = element.querySelector('.popup__photo');
+  const photos = element.querySelector('.popup__photos');
+
+  for (let i = 0; i < card.offer.photos.length; i++) {
+    const photo = photoTemplate.cloneNode(true);
+    photo.src = card.offer.photos[i];
+    photos.appendChild(photo);
+  }
+
+  photos.removeChild(photoTemplate);
+};
+
+const renderFeatures = (element, card) => {
+  const popupFeatures = element.querySelector('.popup__features');
+  popupFeatures.innerHTML = '';
+
+  for (let i = 0; i < card.offer.features.length; i++) {
+    const featureItem = document.createElement('li');
+    featureItem.classList.add('popup__feature', `popup__feature--${card.offer.features[i]}`);
+    popupFeatures.appendChild(featureItem);
+  }
+};
+
+const renderCard = (card) => {
+  const cardElement = mapCardTemplate.cloneNode(true);
   const photos = cardElement.querySelector('.popup__photos');
   const popupFeatures = cardElement.querySelector('.popup__features');
+  const cardAvatar = cardElement.querySelector('.popup__avatar');
+  const cardTitle = cardElement.querySelector('.popup__title');
+  const cardAddress = cardElement.querySelector('.popup__text--address');
+  const cardPrice = cardElement.querySelector('.popup__text--price');
+  const cardType = cardElement.querySelector('.popup__type');
+  const cardCapacity = cardElement.querySelector('.popup__text--capacity');
+  const cardTime = cardElement.querySelector('.popup__text--time');
+  const cardDescription = cardElement.querySelector('.popup__description');
 
   if (card.author.avatar) {
-    cardElement.querySelector('.popup__avatar').src = card.author.avatar;
+    cardAvatar.src = card.author.avatar;
   } else {
-    cardElement.querySelector('.popup__avatar').classList.add('hidden');
+    cardAvatar.classList.add('hidden');
   }
 
   if (card.offer.title) {
-    cardElement.querySelector('.popup__title').textContent = card.offer.title;
+    cardTitle.textContent = card.offer.title;
   } else {
-    cardElement.querySelector('.popup__title').classList.add('hidden');
+    cardTitle.classList.add('hidden');
   }
 
   if (card.offer.address) {
-    cardElement.querySelector('.popup__text--address').textContent = card.offer.address;
+    cardAddress.textContent = card.offer.address;
   } else {
-    cardElement.querySelector('.popup__text--address').classList.add('hidden');
+    cardAddress.classList.add('hidden');
   }
 
   if (card.offer.price) {
-    cardElement.querySelector('.popup__text--price').textContent = `${card.offer.price}₽/ночь`;
+    cardPrice.textContent = `${card.offer.price}₽/ночь`;
   } else {
-    cardElement.querySelector('.popup__text--price').classList.add('hidden');
+    cardPrice.classList.add('hidden');
   }
 
   if (card.offer.type) {
-    cardElement.querySelector('.popup__type').textContent = dwellingType[card.offer.type];
+    cardType.textContent = dwellingType[card.offer.type];
   } else {
-    cardElement.querySelector('.popup__type').classList.add('hidden');
+    cardType.classList.add('hidden');
   }
 
   if (card.offer.rooms && card.offer.guests) {
-    cardElement.querySelector('.popup__text--capacity').textContent = `${card.offer.rooms} комнаты для ${card.offer.guests} гостей`;
+    cardCapacity.textContent = `${card.offer.rooms} комнаты для ${card.offer.guests} гостей`;
   } else {
-    cardElement.querySelector('.popup__text--capacity').classList.add('hidden');
+    cardCapacity.classList.add('hidden');
   }
 
   if (card.offer.checkin && card.offer.checkout) {
-    cardElement.querySelector('.popup__text--time').textContent = `Заезд после ${card.offer.checkin}, выезд до ${card.offer.checkout}`;
+    cardTime.textContent = `Заезд после ${card.offer.checkin}, выезд до ${card.offer.checkout}`;
   } else {
-    cardElement.querySelector('.popup__text--time').classList.add('hidden');
+    cardTime.classList.add('hidden');
   }
 
   if (card.offer.description) {
-    cardElement.querySelector('.popup__description').textContent = card.offer.description;
+    cardDescription.textContent = card.offer.description;
   } else {
-    cardElement.querySelector('.popup__description').classList.add('hidden');
+    cardDescription.classList.add('hidden');
   }
 
-  const renderPhotos = () => {
-    for (let i = 0; i < card.offer.photos.length; i++) {
-      const photo = photoTemplate.cloneNode(true);
-
-      photo.src = card.offer.photos[i];
-      photos.appendChild(photo);
-    }
-
-    photos.removeChild(photoTemplate);
-  };
-
   if (card.offer.photos) {
-    renderPhotos();
+    renderPhotos(cardElement, pinsArray[0]);
   } else {
     photos.classList.add('hidden');
   }
 
-  const renderFeatures = () => {
-    popupFeatures.innerHTML = '';
-
-    for (let i = 0; i < card.offer.features.length; i++) {
-      const featureItem = document.createElement('li');
-      featureItem.classList.add('popup__feature');
-      featureItem.classList.add(`popup__feature--${card.offer.features[i]}`);
-      popupFeatures.appendChild(featureItem);
-    }
-  };
-
   if (card.offer.features) {
-    renderFeatures();
+    renderFeatures(cardElement, pinsArray[0]);
   } else {
     popupFeatures.classList.add('hidden');
   }
 
-  return cardElement;
+  map.insertBefore(cardElement, mapFiltersContainer);
 };
 
-const renderCards = () => {
-  const cards = renderAdvertisements(ADVERTISEMENT_INFO);
-  const cardFragment = document.createDocumentFragment();
-
-  cardFragment.appendChild(renderOneCard(cards[0]));
-
-  map.insertBefore(cardFragment, mapFiltersContainer);
-};
-
-renderCards();
+renderCard(pinsArray[0]);
