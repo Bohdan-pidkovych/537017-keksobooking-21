@@ -97,7 +97,7 @@ const mapPins = document.querySelector('.map__pins');
 
 // renderPins(pinsArray);
 
-// const mapFiltersContainer = document.querySelector('.map__filters-container');
+const mapFiltersContainer = document.querySelector('.map__filters-container');
 // const mapCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 
 // const renderPhotos = (element, card) => {
@@ -202,16 +202,22 @@ const mapPins = document.querySelector('.map__pins');
 
 // renderCard(pinsArray[0]);
 
+const mapFilters = mapFiltersContainer.querySelector('.map__filters');
+const mapFiltersSelects = mapFilters.querySelectorAll('select');
+const mapFiltersFieldset = mapFilters.querySelector('fieldset');
 const adForm = document.querySelector('.ad-form');
 const adFormFieldsets = adForm.querySelectorAll('fieldset');
 const addressInput = adForm.querySelector('#address');
 const roomsInput = adForm.querySelector('#room_number');
 const capacityInput = adForm.querySelector('#capacity');
 const mapPinMain = mapPins.querySelector('.map__pin--main');
+const PIN_MAIN_WIDTH = 62;
+const PIN_MAIN_HEIGHT = 62;
+const PIN_MAIN_HEIGHT_ACTIVE = 84;
 
-const getAdressPin = () => {
-  const locationX = mapPinMain.offsetTop;
-  const locationY = mapPinMain.offsetLeft;
+const getAdressPin = (pinWidth, pinHeight) => {
+  const locationX = mapPinMain.offsetLeft + pinWidth;
+  const locationY = mapPinMain.offsetTop + pinHeight;
   return `${locationX}, ${locationY}`;
 };
 
@@ -221,7 +227,13 @@ const getFormDisabled = () => {
   for (let i = 0; i < adFormFieldsets.length; i++) {
     adFormFieldsets[i].disabled = true;
   }
-  addressInput.value = getAdressPin();
+
+  for (let i = 0; i < mapFiltersSelects.length; i++) {
+    mapFiltersSelects[i].disabled = true;
+  }
+  mapFiltersFieldset.disabled = true;
+
+  addressInput.value = getAdressPin(PIN_MAIN_WIDTH / 2, PIN_MAIN_HEIGHT / 2);
 };
 
 getFormDisabled();
@@ -232,6 +244,14 @@ const getFormEnabled = () => {
   for (let i = 0; i < adFormFieldsets.length; i++) {
     adFormFieldsets[i].disabled = false;
   }
+
+  for (let i = 0; i < mapFiltersSelects.length; i++) {
+    mapFiltersSelects[i].disabled = false;
+  }
+  mapFiltersFieldset.disabled = false;
+
+  addressInput.value = getAdressPin(PIN_MAIN_WIDTH / 2, PIN_MAIN_HEIGHT_ACTIVE);
+  compareRoomsCapacity();
 };
 
 mapPinMain.addEventListener('mousedown', (evt) => {
@@ -249,11 +269,11 @@ mapPinMain.addEventListener('keydown', (evt) => {
 });
 
 const compareRoomsCapacity = () => {
-  if ((roomsInput.value === '100' && capacityInput !== '0') || (roomsInput.value !== '100' && capacityInput.value === '0')) {
+  if ((roomsInput.value === '100' && capacityInput.value !== '0') || (roomsInput.value !== '100' && capacityInput.value === '0')) {
     roomsInput.setCustomValidity('100 комнат - не для гостей');
-  } else if (roomsInput.value < capacityInput.value) {
+  } else if (Number(roomsInput.value) < Number(capacityInput.value)) {
     roomsInput.setCustomValidity(`${roomsInput.value} комната — не для ${capacityInput.value} гостя. Выберите больше комнат`);
-  } else if (roomsInput.value >= capacityInput.value) {
+  } else if (Number(roomsInput.value) >= Number(capacityInput.value)) {
     roomsInput.setCustomValidity('');
   }
 };
