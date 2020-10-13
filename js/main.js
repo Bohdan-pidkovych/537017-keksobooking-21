@@ -97,7 +97,7 @@ const mapPins = document.querySelector('.map__pins');
 
 // renderPins(pinsArray);
 
-const mapFiltersContainer = document.querySelector('.map__filters-container');
+// const mapFiltersContainer = document.querySelector('.map__filters-container');
 // const mapCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 
 // const renderPhotos = (element, card) => {
@@ -202,11 +202,8 @@ const mapFiltersContainer = document.querySelector('.map__filters-container');
 
 // renderCard(pinsArray[0]);
 
-const mapFilters = mapFiltersContainer.querySelector('.map__filters');
-const mapFiltersSelects = mapFilters.querySelectorAll('select');
-const mapFiltersFieldset = mapFilters.querySelector('fieldset');
 const adForm = document.querySelector('.ad-form');
-const adFormFieldsets = adForm.querySelectorAll('fieldset');
+const formsFieldsets = document.querySelectorAll('.map__filters select, .map__filters fieldset, .ad-form fieldset');
 const addressInput = adForm.querySelector('#address');
 const roomsInput = adForm.querySelector('#room_number');
 const capacityInput = adForm.querySelector('#capacity');
@@ -221,34 +218,24 @@ const getAdressPin = (pinWidth, pinHeight) => {
   return `${locationX}, ${locationY}`;
 };
 
-const getFormDisabled = () => {
+const disableForm = () => {
   adForm.classList.add('ad-form--disabled');
 
-  for (let i = 0; i < adFormFieldsets.length; i++) {
-    adFormFieldsets[i].disabled = true;
+  for (let i = 0; i < formsFieldsets.length; i++) {
+    formsFieldsets[i].disabled = true;
   }
-
-  for (let i = 0; i < mapFiltersSelects.length; i++) {
-    mapFiltersSelects[i].disabled = true;
-  }
-  mapFiltersFieldset.disabled = true;
 
   addressInput.value = getAdressPin(PIN_MAIN_WIDTH / 2, PIN_MAIN_HEIGHT / 2);
 };
 
-getFormDisabled();
+disableForm();
 
-const getFormEnabled = () => {
+const enableForm = () => {
   adForm.classList.remove('ad-form--disabled');
 
-  for (let i = 0; i < adFormFieldsets.length; i++) {
-    adFormFieldsets[i].disabled = false;
+  for (let i = 0; i < formsFieldsets.length; i++) {
+    formsFieldsets[i].disabled = false;
   }
-
-  for (let i = 0; i < mapFiltersSelects.length; i++) {
-    mapFiltersSelects[i].disabled = false;
-  }
-  mapFiltersFieldset.disabled = false;
 
   addressInput.value = getAdressPin(PIN_MAIN_WIDTH / 2, PIN_MAIN_HEIGHT_ACTIVE);
   compareRoomsCapacity();
@@ -257,22 +244,28 @@ const getFormEnabled = () => {
 mapPinMain.addEventListener('mousedown', (evt) => {
   if (evt.which === 1) {
     map.classList.remove('map--faded');
-    getFormEnabled();
+    enableForm();
   }
 });
 
 mapPinMain.addEventListener('keydown', (evt) => {
   if (evt.key === 'Enter') {
     map.classList.remove('map--faded');
-    getFormEnabled();
+    enableForm();
   }
 });
+
+const getInputText = (select) => {
+  const options = select.options;
+  const selectedIndex = options.selectedIndex;
+  return options[selectedIndex].textContent;
+};
 
 const compareRoomsCapacity = () => {
   if ((roomsInput.value === '100' && capacityInput.value !== '0') || (roomsInput.value !== '100' && capacityInput.value === '0')) {
     roomsInput.setCustomValidity('100 комнат - не для гостей');
   } else if (Number(roomsInput.value) < Number(capacityInput.value)) {
-    roomsInput.setCustomValidity(`${roomsInput.value} комната — не для ${capacityInput.value} гостя. Выберите больше комнат`);
+    roomsInput.setCustomValidity(`${getInputText(roomsInput)} — не ${getInputText(capacityInput)}. Выберите больше комнат`);
   } else if (Number(roomsInput.value) >= Number(capacityInput.value)) {
     roomsInput.setCustomValidity('');
   }
