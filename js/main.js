@@ -235,24 +235,39 @@ const enableForm = () => {
 
   addressInput.value = getAdressPin(PIN_MAIN_WIDTH / 2, PIN_MAIN_HEIGHT_ACTIVE);
   compareRoomsCapacity();
-  coordinateTypePrice(typeInput, priceInput);
+};
+
+const onPinPress = (evt) => {
+  let target = evt.target;
+  let button = target.closest('.map__pin');
+  if (button && !button.classList.contains('map__pin--main')) {
+    const imageSrc = button.firstChild.getAttribute('src');
+    openCard(imageSrc);
+  }
+};
+
+const activatePage = () => {
+  map.classList.remove('map--faded');
+  enableForm();
+  renderPins(pinsArray);
+
+  mapPins.addEventListener('click', onPinPress);
+  mapPins.addEventListener('keydown', (evt) => {
+    if (evt.key === 'Enter') {
+      onPinPress(evt);
+    }
+  });
 };
 
 mapPinMain.addEventListener('mousedown', (evt) => {
   if (evt.which === 1) {
-    map.classList.remove('map--faded');
-    enableForm();
-    // renderCard(pinsArray[0]);
-    renderPins(pinsArray);
+    activatePage();
   }
 });
 
 mapPinMain.addEventListener('keydown', (evt) => {
   if (evt.key === 'Enter') {
-    map.classList.remove('map--faded');
-    enableForm();
-    // renderCard(pinsArray[0]);
-    renderPins(pinsArray);
+    activatePage();
   }
 });
 
@@ -272,9 +287,12 @@ const compareRoomsCapacity = () => {
   }
 };
 
-roomsInput.addEventListener('change', compareRoomsCapacity);
-
-capacityInput.addEventListener('change', compareRoomsCapacity);
+roomsInput.addEventListener('change', () => {
+  compareRoomsCapacity();
+});
+capacityInput.addEventListener('change', () => {
+  compareRoomsCapacity();
+});
 
 const openCard = (src) => {
   for (let pin of pinsArray) {
@@ -284,7 +302,9 @@ const openCard = (src) => {
     }
   }
   const mapCard = map.querySelector('.map__card');
-  mapCard.querySelector('.popup__close').addEventListener('click', closeCard);
+  mapCard.querySelector('.popup__close').addEventListener('click', () => {
+    closeCard();
+  });
   document.addEventListener('keydown', onCardEscPress);
 };
 
@@ -304,44 +324,19 @@ const onCardEscPress = (evt) => {
   }
 };
 
-map.addEventListener('click', (evt) => {
-  let target = evt.target;
-  if (target.tagName === 'IMG') {
-    const imageSrc = target.getAttribute('src');
-    target = target.parentNode;
-    openCard(imageSrc);
-  }
-  // if ((target.classList.contains('map__pin')) && (!target.classList.contains('map__pin--main'))) {
-  //   openCard(imageSrc);
-  // }
-});
-
-map.addEventListener('keydown', (evt) => {
-  if (evt.key === 'Enter') {
-    let target = evt.target.firstChild;
-    const imageSrc = target.getAttribute('src');
-    target = target.parentNode;
-    openCard(imageSrc);
-  }
-});
+const dwellingPrice = {
+  'bungalow': '0',
+  'flat': '1000',
+  'house': '5000',
+  'palace': '10000'
+};
 
 const coordinateTypePrice = (select, input) => {
   const options = select.options;
   const selectedIndex = options.selectedIndex;
   const valueOption = options[selectedIndex].value;
-  if (valueOption === 'bungalow') {
-    input.setAttribute('placeholder', '0');
-    input.setAttribute('min', '0');
-  } else if (valueOption === 'flat') {
-    input.setAttribute('placeholder', '1000');
-    input.setAttribute('min', '1000');
-  } else if (valueOption === 'house') {
-    input.setAttribute('placeholder', '5000');
-    input.setAttribute('min', '5000');
-  } else if (valueOption === 'palace') {
-    input.setAttribute('placeholder', '10000');
-    input.setAttribute('min', '10000');
-  }
+  input.setAttribute('placeholder', dwellingPrice[valueOption]);
+  input.setAttribute('min', dwellingPrice[valueOption]);
 };
 
 const typeInput = adForm.querySelector('#type');
@@ -354,14 +349,10 @@ typeInput.addEventListener('change', () => {
 const timeInInput = adForm.querySelector('#timein');
 const timeOutInput = adForm.querySelector('#timeout');
 
-const coordinateTimeInOut = (evt) => {
+const onTimeInputChange = (evt) => {
   timeInInput.value = evt.target.value;
   timeOutInput.value = evt.target.value;
 };
 
-const changeTime = (evt) => {
-  coordinateTimeInOut(evt);
-};
-
-timeInInput.addEventListener('change', changeTime);
-timeOutInput.addEventListener('change', changeTime);
+timeInInput.addEventListener('change', onTimeInputChange);
+timeOutInput.addEventListener('change', onTimeInputChange);
