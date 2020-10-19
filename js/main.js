@@ -24,7 +24,7 @@ const ADVERTISEMENT_INFO = {
   photos: ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg']
 };
 
-const dwellingType = {
+const appartmentType = {
   palace: 'Дворец',
   flat: 'Квартира',
   house: 'Дом',
@@ -160,7 +160,7 @@ const renderCard = (card) => {
   }
 
   if (card.offer.type) {
-    cardType.textContent = dwellingType[card.offer.type];
+    cardType.textContent = appartmentType[card.offer.type];
   } else {
     cardType.classList.add('hidden');
   }
@@ -249,6 +249,8 @@ const onPinPress = (evt) => {
 const activatePage = () => {
   map.classList.remove('map--faded');
   enableForm();
+  mapPinMain.removeEventListener('mousedown', onPinMainClick);
+  mapPinMain.removeEventListener('keydown', onPinMainPress);
   renderPins(pinsArray);
 
   mapPins.addEventListener('click', onPinPress);
@@ -259,17 +261,20 @@ const activatePage = () => {
   });
 };
 
-mapPinMain.addEventListener('mousedown', (evt) => {
+const onPinMainClick = (evt) => {
   if (evt.which === 1) {
     activatePage();
   }
-});
+};
 
-mapPinMain.addEventListener('keydown', (evt) => {
+const onPinMainPress = (evt) => {
   if (evt.key === 'Enter') {
     activatePage();
   }
-});
+};
+
+mapPinMain.addEventListener('mousedown', onPinMainClick);
+mapPinMain.addEventListener('keydown', onPinMainPress);
 
 const getInputText = (select) => {
   const options = select.options;
@@ -324,7 +329,7 @@ const onCardEscPress = (evt) => {
   }
 };
 
-const dwellingPrice = {
+const appartmentPrice = {
   'bungalow': '0',
   'flat': '1000',
   'house': '5000',
@@ -335,8 +340,8 @@ const coordinateTypePrice = (select, input) => {
   const options = select.options;
   const selectedIndex = options.selectedIndex;
   const valueOption = options[selectedIndex].value;
-  input.setAttribute('placeholder', dwellingPrice[valueOption]);
-  input.setAttribute('min', dwellingPrice[valueOption]);
+  input.setAttribute('placeholder', appartmentPrice[valueOption]);
+  input.setAttribute('min', appartmentPrice[valueOption]);
 };
 
 const typeInput = adForm.querySelector('#type');
