@@ -34,8 +34,6 @@
     addressInput.value = getAdressPin(PIN_MAIN_WIDTH / 2, PIN_MAIN_HEIGHT / 2);
   };
 
-  disableForm();
-
   const enableForm = () => {
     adForm.classList.remove('ad-form--disabled');
 
@@ -97,6 +95,8 @@
   timeOutInput.addEventListener('change', onTimeInputChange);
 
   window.form = {
-    enableForm
+    getAdressPin,
+    enableForm,
+    disableForm
   };
 })();

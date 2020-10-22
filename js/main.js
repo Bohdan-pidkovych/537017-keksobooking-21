@@ -32,6 +32,8 @@
     }
   };
 
+  window.form.disableForm();
+
   mapPinMain.addEventListener('mousedown', onPinMainClick);
   mapPinMain.addEventListener('keydown', onPinMainPress);
 })();
