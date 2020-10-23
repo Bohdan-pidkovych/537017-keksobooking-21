@@ -8,9 +8,6 @@
   const capacityInput = adForm.querySelector('#capacity');
   const mapPins = document.querySelector('.map__pins');
   const mapPinMain = mapPins.querySelector('.map__pin--main');
-  const PIN_MAIN_WIDTH = 62;
-  const PIN_MAIN_HEIGHT = 62;
-  const PIN_MAIN_HEIGHT_ACTIVE = 84;
   const appartmentPrice = {
     'bungalow': '0',
     'flat': '1000',
@@ -31,7 +28,7 @@
       formsFieldsets[i].disabled = true;
     }
 
-    addressInput.value = getAdressPin(PIN_MAIN_WIDTH / 2, PIN_MAIN_HEIGHT / 2);
+    addressInput.value = getAdressPin(window.constants.PIN_MAIN_WIDTH / 2, window.constants.PIN_MAIN_HEIGHT / 2);
   };
 
   const enableForm = () => {
@@ -41,7 +38,7 @@
       formsFieldsets[i].disabled = false;
     }
 
-    addressInput.value = getAdressPin(PIN_MAIN_WIDTH / 2, PIN_MAIN_HEIGHT_ACTIVE);
+    addressInput.value = getAdressPin(window.constants.PIN_MAIN_WIDTH / 2, window.constants.PIN_MAIN_HEIGHT_ACTIVE);
     compareRoomsCapacity();
   };
 
