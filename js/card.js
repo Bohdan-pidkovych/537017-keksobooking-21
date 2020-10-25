@@ -98,13 +98,13 @@
     }
 
     if (card.offer.photos) {
-      renderPhotos(cardElement, window.data.pinsArray[0]);
+      renderPhotos(cardElement, card);
     } else {
       photos.classList.add('hidden');
     }
 
     if (card.offer.features) {
-      renderFeatures(cardElement, window.data.pinsArray[0]);
+      renderFeatures(cardElement, card);
     } else {
       popupFeatures.classList.add('hidden');
     }

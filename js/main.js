@@ -10,14 +10,7 @@
     window.form.enableForm();
     mapPinMain.removeEventListener('mousedown', onPinMainClick);
     mapPinMain.removeEventListener('keydown', onPinMainPress);
-    window.map.renderPins(window.data.pinsArray);
-
-    mapPins.addEventListener('click', window.map.onPinPress);
-    mapPins.addEventListener('keydown', (evt) => {
-      if (evt.key === 'Enter') {
-        window.map.onPinPress(evt);
-      }
-    });
+    window.map.renderPins();
   };
 
   const onPinMainClick = (evt) => {
