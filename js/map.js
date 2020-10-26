@@ -4,13 +4,16 @@
   const map = document.querySelector('.map');
   const mapPins = document.querySelector('.map__pins');
 
-  const openCard = (alt, pins) => {
-    for (let pin of pins) {
-      if (pin.offer.title === alt) {
-        closeCard();
-        window.card.renderCard(pin);
+  const openCard = (pins, button) => {
+    const pinsArray = mapPins.querySelectorAll('.map__pin:not(:first-of-type)');
+
+    closeCard();
+    for (let i = 0; i < pinsArray.length; i++) {
+      if (pinsArray[i] === button) {
+        window.card.renderCard(pins[i]);
       }
     }
+
     const mapCard = map.querySelector('.map__card');
     mapCard.querySelector('.popup__close').addEventListener('click', () => {
       closeCard();
@@ -40,13 +43,12 @@
     let target = evt.target;
     let button = target.closest('.map__pin');
     if (button && !button.classList.contains('map__pin--main')) {
-      const imageAlt = button.firstChild.getAttribute('alt');
-      openCard(imageAlt, pins);
+      openCard(pins, button);
       button.classList.add('map__pin--active');
     }
   };
 
-  const successHandler = (pins) => {
+  const onDataLoadSuccess = (pins) => {
     window.pin.renderPins(pins);
 
     mapPins.addEventListener('click', (evt) => {
@@ -54,7 +56,7 @@
     });
   };
 
-  const errorHandler = function (errorMessage) {
+  const onDataLoadError = function (errorMessage) {
     const node = document.createElement('div');
     node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
     node.style.position = 'absolute';
@@ -66,7 +68,7 @@
   };
 
   const sendRequest = () => {
-    window.backend.load(successHandler, errorHandler);
+    window.backend.load(onDataLoadSuccess, onDataLoadError);
   };
 
   window.map = {
