@@ -14,9 +14,9 @@
 
     mapPins.appendChild(pinFragment);
 
-    const openCard = (src) => {
+    const openCard = (alt) => {
       for (let pin of pinsArray) {
-        if (pin.author.avatar === src) {
+        if (pin.offer.title === alt) {
           closeCard();
           window.card.renderCard(pin);
         }
@@ -41,8 +41,8 @@
       let target = evt.target;
       let button = target.closest('.map__pin');
       if (button && !button.classList.contains('map__pin--main')) {
-        const imageSrc = button.firstChild.getAttribute('src');
-        openCard(imageSrc);
+        const imageAlt = button.firstChild.getAttribute('alt');
+        openCard(imageAlt);
       }
     };
 
