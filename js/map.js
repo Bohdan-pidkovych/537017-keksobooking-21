@@ -4,60 +4,53 @@
   const map = document.querySelector('.map');
   const mapPins = document.querySelector('.map__pins');
 
-  const successHandler = (pinsArray) => {
-    const pinFragment = document.createDocumentFragment();
-    for (let i = 0; i < pinsArray.length; i++) {
-      if (pinsArray[i].offer) {
-        pinFragment.appendChild(window.pin.renderOnePin(pinsArray[i]));
+  const openCard = (alt, pins) => {
+    for (let pin of pins) {
+      if (pin.offer.title === alt) {
+        closeCard();
+        window.card.renderCard(pin);
       }
     }
+    const mapCard = map.querySelector('.map__card');
+    mapCard.querySelector('.popup__close').addEventListener('click', () => {
+      closeCard();
+    });
+    document.addEventListener('keydown', onCardEscPress);
+  };
 
-    mapPins.appendChild(pinFragment);
+  const closeCard = () => {
+    const mapCard = map.querySelector('.map__card');
+    if (mapCard) {
+      mapCard.remove();
+      const button = mapPins.querySelector('.map__pin--active');
+      button.classList.remove('map__pin--active');
+      mapCard.querySelector('.popup__close').removeEventListener('click', closeCard);
+      document.removeEventListener('keydown', onCardEscPress);
+    }
+  };
 
-    const openCard = (alt) => {
-      for (let pin of pinsArray) {
-        if (pin.offer.title === alt) {
-          closeCard();
-          window.card.renderCard(pin);
-        }
-      }
-      const mapCard = map.querySelector('.map__card');
-      mapCard.querySelector('.popup__close').addEventListener('click', () => {
-        closeCard();
-      });
-      document.addEventListener('keydown', onCardEscPress);
-    };
+  const onCardEscPress = (evt) => {
+    if (evt.key === 'Escape') {
+      evt.preventDefault();
+      closeCard();
+    }
+  };
 
-    const closeCard = () => {
-      const mapCard = map.querySelector('.map__card');
-      if (mapCard) {
-        mapCard.remove();
-        mapCard.querySelector('.popup__close').removeEventListener('click', closeCard);
-        document.removeEventListener('keydown', onCardEscPress);
-      }
-    };
+  const onPinPress = (evt, pins) => {
+    let target = evt.target;
+    let button = target.closest('.map__pin');
+    if (button && !button.classList.contains('map__pin--main')) {
+      const imageAlt = button.firstChild.getAttribute('alt');
+      openCard(imageAlt, pins);
+      button.classList.add('map__pin--active');
+    }
+  };
 
-    const onPinPress = (evt) => {
-      let target = evt.target;
-      let button = target.closest('.map__pin');
-      if (button && !button.classList.contains('map__pin--main')) {
-        const imageAlt = button.firstChild.getAttribute('alt');
-        openCard(imageAlt);
-      }
-    };
+  const successHandler = (pins) => {
+    window.pin.renderPins(pins);
 
-    const onCardEscPress = (evt) => {
-      if (evt.key === 'Escape') {
-        evt.preventDefault();
-        closeCard();
-      }
-    };
-
-    mapPins.addEventListener('click', onPinPress);
-    mapPins.addEventListener('keydown', (evt) => {
-      if (evt.key === 'Enter') {
-        onPinPress(evt);
-      }
+    mapPins.addEventListener('click', (evt) => {
+      onPinPress(evt, pins);
     });
   };
 
@@ -72,11 +65,11 @@
     document.body.insertAdjacentElement('afterbegin', node);
   };
 
-  const renderPins = () => {
+  const sendRequest = () => {
     window.backend.load(successHandler, errorHandler);
   };
 
   window.map = {
-    renderPins
+    sendRequest
   };
 })();

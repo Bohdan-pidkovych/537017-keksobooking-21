@@ -10,7 +10,7 @@
     window.form.enableForm();
     mapPinMain.removeEventListener('mousedown', onPinMainClick);
     mapPinMain.removeEventListener('keydown', onPinMainPress);
-    window.map.renderPins();
+    window.map.sendRequest();
   };
 
   const onPinMainClick = (evt) => {
