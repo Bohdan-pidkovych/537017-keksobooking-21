@@ -1,10 +1,11 @@
 'use strict';
 
 (() => {
-  const mapOnePin = document.querySelector('#pin').content.querySelector('.map__pin');
+  const mapPins = document.querySelector('.map__pins');
+  const mapPin = document.querySelector('#pin').content.querySelector('.map__pin');
 
-  const renderOnePin = (element) => {
-    const pinElement = mapOnePin.cloneNode(true);
+  const renderPin = (element) => {
+    const pinElement = mapPin.cloneNode(true);
 
     pinElement.style.left = `${element.location.x - window.constants.PIN_WIDTH / 2}px`;
     pinElement.style.top = `${element.location.y - window.constants.PIN_HEIGHT}px`;
@@ -14,7 +15,18 @@
     return pinElement;
   };
 
+  const renderPins = (pins) => {
+    const pinFragment = document.createDocumentFragment();
+    for (let i = 0; i < pins.length; i++) {
+      if (pins[i].offer) {
+        pinFragment.appendChild(renderPin(pins[i]));
+      }
+    }
+
+    mapPins.appendChild(pinFragment);
+  };
+
   window.pin = {
-    renderOnePin
+    renderPins
   };
 })();
