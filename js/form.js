@@ -19,8 +19,8 @@
   const successMessage = successMessageTemplate.cloneNode(true);
   const errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
   const errorMessage = errorMessageTemplate.cloneNode(true);
-  const mapPinMainDefaultX = (map.clientWidth - window.constants.PIN_MAIN_WIDTH) / 2;
-  const mapPinMainDefaultY = (map.clientHeight - window.constants.PIN_MAIN_HEIGHT) / 2;
+  const mapPinMainDefaultX = mapPinMain.offsetLeft;
+  const mapPinMainDefaultY = mapPinMain.offsetTop;
 
   const getAdressPin = (pinWidth, pinHeight) => {
     const locationX = mapPinMain.offsetLeft + pinWidth;
@@ -151,8 +151,8 @@
     adForm.reset();
     disableForm();
     showSuccessMessage();
-    mapPinMain.style.left = mapPinMainDefaultX;
-    mapPinMain.style.top = mapPinMainDefaultY;
+    mapPinMain.style.left = mapPinMainDefaultX + 'px';
+    mapPinMain.style.top = mapPinMainDefaultY + 'px';
     mapPinMain.addEventListener('mousedown', window.onPinMainClick);
     mapPinMain.addEventListener('keydown', window.onPinMainPress);
   };
@@ -174,8 +174,8 @@
     map.classList.add('map--faded');
     adForm.reset();
     disableForm();
-    mapPinMain.style.left = mapPinMainDefaultX;
-    mapPinMain.style.top = mapPinMainDefaultY;
+    mapPinMain.style.left = mapPinMainDefaultX + 'px';
+    mapPinMain.style.top = mapPinMainDefaultY + 'px';
     mapPinMain.addEventListener('mousedown', window.onPinMainClick);
     mapPinMain.addEventListener('keydown', window.onPinMainPress);
     buttonReset.removeEventListener('click', onButtonResetClick);
