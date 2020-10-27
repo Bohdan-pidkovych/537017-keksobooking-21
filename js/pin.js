@@ -26,7 +26,18 @@
     mapPins.appendChild(pinFragment);
   };
 
+  const deletePins = () => {
+    const pins = mapPins.querySelectorAll('.map__pin');
+
+    for (let i = 0; i < pins.length; i++) {
+      if (!pins[i].classList.contains('map__pin--main')) {
+        pins[i].remove();
+      }
+    }
+  };
+
   window.pin = {
-    renderPins
+    renderPins,
+    deletePins
   };
 })();

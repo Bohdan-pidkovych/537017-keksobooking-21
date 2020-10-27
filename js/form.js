@@ -6,6 +6,7 @@
   const addressInput = adForm.querySelector('#address');
   const roomsInput = adForm.querySelector('#room_number');
   const capacityInput = adForm.querySelector('#capacity');
+  const map = document.querySelector('.map');
   const mapPins = document.querySelector('.map__pins');
   const mapPinMain = mapPins.querySelector('.map__pin--main');
   const appartmentPrice = {
@@ -14,6 +15,12 @@
     'house': '5000',
     'palace': '10000'
   };
+  const successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
+  const successMessage = successMessageTemplate.cloneNode(true);
+  const errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
+  const errorMessage = errorMessageTemplate.cloneNode(true);
+  const mapPinMainDefaultX = (map.clientWidth - window.constants.PIN_MAIN_WIDTH) / 2;
+  const mapPinMainDefaultY = (map.clientHeight - window.constants.PIN_MAIN_HEIGHT) / 2;
 
   const getAdressPin = (pinWidth, pinHeight) => {
     const locationX = mapPinMain.offsetLeft + pinWidth;
@@ -90,6 +97,91 @@
 
   timeInInput.addEventListener('change', onTimeInputChange);
   timeOutInput.addEventListener('change', onTimeInputChange);
+
+  const showSuccessMessage = () => {
+    document.querySelector('main').insertAdjacentElement('afterbegin', successMessage);
+
+    document.addEventListener('click', hideSuccessMessage);
+    document.addEventListener('keydown', onMessageEscPress);
+  };
+
+  const hideSuccessMessage = () => {
+    successMessage.remove();
+
+    document.removeEventListener('click', hideSuccessMessage);
+    document.removeEventListener('keydown', onMessageEscPress);
+  };
+
+  const showErrorMessage = () => {
+    document.querySelector('main').insertAdjacentElement('afterbegin', errorMessage);
+
+    errorMessage.querySelector('.error__button').addEventListener('click', hideErrorMessage);
+    document.addEventListener('click', hideErrorMessage);
+    document.addEventListener('keydown', onMessageEscPress);
+  };
+
+  const hideErrorMessage = () => {
+    errorMessage.remove();
+
+    errorMessage.querySelector('.error__button').removeEventListener('click', hideErrorMessage);
+    document.removeEventListener('click', hideErrorMessage);
+    document.removeEventListener('keydown', onMessageEscPress);
+  };
+
+  const onMessageEscPress = (evt) => {
+    if (evt.key === 'Escape') {
+      evt.preventDefault();
+      if (successMessage) {
+        successMessage.remove();
+        document.removeEventListener('click', hideSuccessMessage);
+      }
+      if (errorMessage) {
+        errorMessage.remove();
+        document.removeEventListener('click', hideErrorMessage);
+        errorMessage.querySelector('.error__button').removeEventListener('click', hideErrorMessage);
+      }
+      document.removeEventListener('keydown', onMessageEscPress);
+    }
+  };
+
+  const onFormSuccessSubmit = () => {
+    window.map.closeCard();
+    window.pin.deletePins();
+    map.classList.add('map--faded');
+    adForm.reset();
+    disableForm();
+    showSuccessMessage();
+    mapPinMain.style.left = mapPinMainDefaultX;
+    mapPinMain.style.top = mapPinMainDefaultY;
+    mapPinMain.addEventListener('mousedown', window.onPinMainClick);
+    mapPinMain.addEventListener('keydown', window.onPinMainPress);
+  };
+
+  const onFormErrorSubmit = () => {
+    showErrorMessage();
+  };
+
+  adForm.addEventListener('submit', (evt) => {
+    window.backend.save(new FormData(adForm), onFormSuccessSubmit, onFormErrorSubmit);
+    evt.preventDefault();
+  });
+
+  const buttonReset = adForm.querySelector('.ad-form__reset');
+  const onButtonResetClick = (evt) => {
+    evt.preventDefault();
+    window.map.closeCard();
+    window.pin.deletePins();
+    map.classList.add('map--faded');
+    adForm.reset();
+    disableForm();
+    mapPinMain.style.left = mapPinMainDefaultX;
+    mapPinMain.style.top = mapPinMainDefaultY;
+    mapPinMain.addEventListener('mousedown', window.onPinMainClick);
+    mapPinMain.addEventListener('keydown', window.onPinMainPress);
+    buttonReset.removeEventListener('click', onButtonResetClick);
+  };
+
+  buttonReset.addEventListener('click', onButtonResetClick);
 
   window.form = {
     getAdressPin,

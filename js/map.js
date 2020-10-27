@@ -72,6 +72,7 @@
   };
 
   window.map = {
+    closeCard,
     sendRequest
   };
 })();

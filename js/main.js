@@ -8,18 +8,18 @@
   const activatePage = () => {
     map.classList.remove('map--faded');
     window.form.enableForm();
-    mapPinMain.removeEventListener('mousedown', onPinMainClick);
-    mapPinMain.removeEventListener('keydown', onPinMainPress);
+    mapPinMain.removeEventListener('mousedown', window.onPinMainClick);
+    mapPinMain.removeEventListener('keydown', window.onPinMainPress);
     window.map.sendRequest();
   };
 
-  const onPinMainClick = (evt) => {
+  window.onPinMainClick = (evt) => {
     if (evt.which === 1) {
       activatePage();
     }
   };
 
-  const onPinMainPress = (evt) => {
+  window.onPinMainPress = (evt) => {
     if (evt.key === 'Enter') {
       activatePage();
     }
@@ -27,6 +27,6 @@
 
   window.form.disableForm();
 
-  mapPinMain.addEventListener('mousedown', onPinMainClick);
-  mapPinMain.addEventListener('keydown', onPinMainPress);
+  mapPinMain.addEventListener('mousedown', window.onPinMainClick);
+  mapPinMain.addEventListener('keydown', window.onPinMainPress);
 })();
