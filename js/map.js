@@ -3,6 +3,7 @@
 (() => {
   const map = document.querySelector('.map');
   const mapPins = document.querySelector('.map__pins');
+  const mapPinMain = mapPins.querySelector('.map__pin--main');
 
   const openCard = (pins, button) => {
     const pinsArray = mapPins.querySelectorAll('.map__pin:not(:first-of-type)');
@@ -59,6 +60,9 @@
       window.page.activatePage();
     }
   };
+
+  mapPinMain.addEventListener('mousedown', onPinMainClick);
+  mapPinMain.addEventListener('keydown', onPinMainPress);
 
   window.map = {
     closeCard,

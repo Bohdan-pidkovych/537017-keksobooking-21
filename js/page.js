@@ -24,9 +24,9 @@
     window.pin.deletePins();
     map.classList.add('map--faded');
     adForm.reset();
-    window.form.disableForm();
     mapPinMain.style.left = mapPinMainDefaultCoords.x + 'px';
     mapPinMain.style.top = mapPinMainDefaultCoords.y + 'px';
+    window.form.disableForm();
     mapPinMain.addEventListener('mousedown', window.map.onPinMainClick);
     mapPinMain.addEventListener('keydown', window.map.onPinMainPress);
   };
