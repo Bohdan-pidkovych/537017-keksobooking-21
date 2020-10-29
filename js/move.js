@@ -1,6 +1,9 @@
 'use strict';
 
 (() => {
+  const MIN_MAP_COORD_X = 0;
+  const MIN_MAP_COORD_Y = 130;
+  const MAX_MAP_COORD_Y = 630;
   const map = document.querySelector('.map');
   const mapPins = document.querySelector('.map__pins');
   const mapPinMain = mapPins.querySelector('.map__pin--main');
@@ -29,10 +32,10 @@
         y: moveEvt.clientY
       };
 
-      const minCoordX = window.constants.MIN_MAP_COORD_X - window.constants.PIN_MAIN_WIDTH / 2;
+      const minCoordX = MIN_MAP_COORD_X - window.constants.PIN_MAIN_WIDTH / 2;
       const maxCoordX = map.clientWidth - window.constants.PIN_MAIN_WIDTH / 2;
-      const minCoordY = window.constants.MIN_MAP_COORD_Y - window.constants.PIN_MAIN_HEIGHT_ACTIVE;
-      const maxCoordY = window.constants.MAX_MAP_COORD_Y - window.constants.PIN_MAIN_HEIGHT_ACTIVE;
+      const minCoordY = MIN_MAP_COORD_Y - window.constants.PIN_MAIN_HEIGHT_ACTIVE;
+      const maxCoordY = MAX_MAP_COORD_Y - window.constants.PIN_MAIN_HEIGHT_ACTIVE;
       const newCoordX = mapPinMain.offsetLeft - shift.x;
       const newCoordY = mapPinMain.offsetTop - shift.y;
 

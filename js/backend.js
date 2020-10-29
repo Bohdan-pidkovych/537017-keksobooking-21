@@ -1,10 +1,9 @@
 'use strict';
 
 (() => {
-  const URL = 'https://21.javascript.pages.academy/keksobooking/data';
   const TIMEOUT_IN_MS = 10000;
 
-  const load = (onLoad, onError) => {
+  const load = (method, url, onLoad, onError, data = '') => {
     const xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
@@ -43,8 +42,8 @@
 
     xhr.timeout = TIMEOUT_IN_MS;
 
-    xhr.open('GET', URL);
-    xhr.send();
+    xhr.open(method, url);
+    xhr.send(data);
   };
 
   window.backend = {

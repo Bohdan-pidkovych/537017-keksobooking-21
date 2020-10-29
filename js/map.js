@@ -3,6 +3,7 @@
 (() => {
   const map = document.querySelector('.map');
   const mapPins = document.querySelector('.map__pins');
+  const mapPinMain = mapPins.querySelector('.map__pin--main');
 
   const openCard = (pins, button) => {
     const pinsArray = mapPins.querySelectorAll('.map__pin:not(:first-of-type)');
@@ -48,30 +49,25 @@
     }
   };
 
-  const onDataLoadSuccess = (pins) => {
-    window.pin.renderPins(pins);
-
-    mapPins.addEventListener('click', (evt) => {
-      onPinPress(evt, pins);
-    });
+  const onPinMainClick = (evt) => {
+    if (evt.which === 1) {
+      window.page.activatePage();
+    }
   };
 
-  const onDataLoadError = function (errorMessage) {
-    const node = document.createElement('div');
-    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
-    node.style.position = 'absolute';
-    node.style.left = 0;
-    node.style.right = 0;
-    node.style.fontSize = '30px';
-    node.textContent = errorMessage;
-    document.body.insertAdjacentElement('afterbegin', node);
+  const onPinMainPress = (evt) => {
+    if (evt.key === 'Enter') {
+      window.page.activatePage();
+    }
   };
 
-  const sendRequest = () => {
-    window.backend.load(onDataLoadSuccess, onDataLoadError);
-  };
+  mapPinMain.addEventListener('mousedown', onPinMainClick);
+  mapPinMain.addEventListener('keydown', onPinMainPress);
 
   window.map = {
-    sendRequest
+    closeCard,
+    onPinPress,
+    onPinMainClick,
+    onPinMainPress
   };
 })();
