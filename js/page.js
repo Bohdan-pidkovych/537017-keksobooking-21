@@ -31,13 +31,27 @@
     mapPinMain.addEventListener('keydown', window.map.onPinMainPress);
   };
 
+  let pinsArray = [];
+
   const onDataLoadSuccess = (pins) => {
     window.pin.renderPins(pins);
+
+    pinsArray = pins;
 
     mapPins.addEventListener('click', (evt) => {
       window.map.onPinPress(evt, pins);
     });
   };
+
+  const onFilterInputChange = () => {
+    window.map.closeCard();
+    window.pin.deletePins();
+    window.pin.renderPins(window.sort.filterHousingType(pinsArray));
+  };
+
+  const housingType = document.querySelector('#housing-type');
+
+  housingType.addEventListener('change', onFilterInputChange);
 
   const onDataLoadError = function (errorMessage) {
     const node = document.createElement('div');
