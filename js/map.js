@@ -48,31 +48,22 @@
     }
   };
 
-  const onDataLoadSuccess = (pins) => {
-    window.pin.renderPins(pins);
-
-    mapPins.addEventListener('click', (evt) => {
-      onPinPress(evt, pins);
-    });
+  const onPinMainClick = (evt) => {
+    if (evt.which === 1) {
+      window.page.activatePage();
+    }
   };
 
-  const onDataLoadError = function (errorMessage) {
-    const node = document.createElement('div');
-    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
-    node.style.position = 'absolute';
-    node.style.left = 0;
-    node.style.right = 0;
-    node.style.fontSize = '30px';
-    node.textContent = errorMessage;
-    document.body.insertAdjacentElement('afterbegin', node);
-  };
-
-  const sendRequest = () => {
-    window.backend.load(onDataLoadSuccess, onDataLoadError);
+  const onPinMainPress = (evt) => {
+    if (evt.key === 'Enter') {
+      window.page.activatePage();
+    }
   };
 
   window.map = {
     closeCard,
-    sendRequest
+    onPinPress,
+    onPinMainClick,
+    onPinMainPress
   };
 })();

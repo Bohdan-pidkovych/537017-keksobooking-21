@@ -1,26 +1,29 @@
 'use strict';
 
 (() => {
+  const URL_SAVE = 'https://21.javascript.pages.academy/keksobooking';
+  const AppartmentPrice = {
+    BUNGALOW: '0',
+    FLAT: '1000',
+    HOUSE: '5000',
+    PALACE: '10000'
+  };
+  const mapPins = document.querySelector('.map__pins');
+  const mapPinMain = mapPins.querySelector('.map__pin--main');
   const adForm = document.querySelector('.ad-form');
   const formsFieldsets = document.querySelectorAll('.map__filters select, .map__filters fieldset, .ad-form fieldset');
   const addressInput = adForm.querySelector('#address');
   const roomsInput = adForm.querySelector('#room_number');
   const capacityInput = adForm.querySelector('#capacity');
-  const map = document.querySelector('.map');
-  const mapPins = document.querySelector('.map__pins');
-  const mapPinMain = mapPins.querySelector('.map__pin--main');
-  const appartmentPrice = {
-    'bungalow': '0',
-    'flat': '1000',
-    'house': '5000',
-    'palace': '10000'
-  };
+  const typeInput = adForm.querySelector('#type');
+  const priceInput = adForm.querySelector('#price');
+  const timeInInput = adForm.querySelector('#timein');
+  const timeOutInput = adForm.querySelector('#timeout');
+  const buttonReset = adForm.querySelector('.ad-form__reset');
   const successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
   const successMessage = successMessageTemplate.cloneNode(true);
   const errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
   const errorMessage = errorMessageTemplate.cloneNode(true);
-  const mapPinMainDefaultX = mapPinMain.offsetLeft;
-  const mapPinMainDefaultY = mapPinMain.offsetTop;
 
   const getAdressPin = (pinWidth, pinHeight) => {
     const locationX = mapPinMain.offsetLeft + pinWidth;
@@ -47,6 +50,7 @@
 
     addressInput.value = getAdressPin(window.constants.PIN_MAIN_WIDTH / 2, window.constants.PIN_MAIN_HEIGHT_ACTIVE);
     compareRoomsCapacity();
+    buttonReset.addEventListener('click', onButtonResetClick);
   };
 
   const getInputText = (select) => {
@@ -76,19 +80,13 @@
     const options = select.options;
     const selectedIndex = options.selectedIndex;
     const valueOption = options[selectedIndex].value;
-    input.setAttribute('placeholder', appartmentPrice[valueOption]);
-    input.setAttribute('min', appartmentPrice[valueOption]);
+    input.setAttribute('placeholder', AppartmentPrice[valueOption.toUpperCase()]);
+    input.setAttribute('min', AppartmentPrice[valueOption.toUpperCase()]);
   };
-
-  const typeInput = adForm.querySelector('#type');
-  const priceInput = adForm.querySelector('#price');
 
   typeInput.addEventListener('change', () => {
     coordinateTypePrice(typeInput, priceInput);
   });
-
-  const timeInInput = adForm.querySelector('#timein');
-  const timeOutInput = adForm.querySelector('#timeout');
 
   const onTimeInputChange = (evt) => {
     timeInInput.value = evt.target.value;
@@ -145,16 +143,8 @@
   };
 
   const onFormSuccessSubmit = () => {
-    window.map.closeCard();
-    window.pin.deletePins();
-    map.classList.add('map--faded');
-    adForm.reset();
-    disableForm();
+    window.page.resetPage();
     showSuccessMessage();
-    mapPinMain.style.left = mapPinMainDefaultX + 'px';
-    mapPinMain.style.top = mapPinMainDefaultY + 'px';
-    mapPinMain.addEventListener('mousedown', window.onPinMainClick);
-    mapPinMain.addEventListener('keydown', window.onPinMainPress);
   };
 
   const onFormErrorSubmit = () => {
@@ -162,26 +152,15 @@
   };
 
   adForm.addEventListener('submit', (evt) => {
-    window.backend.save(new FormData(adForm), onFormSuccessSubmit, onFormErrorSubmit);
+    window.backend.load('POST', URL_SAVE, onFormSuccessSubmit, onFormErrorSubmit, new FormData(adForm));
     evt.preventDefault();
   });
 
-  const buttonReset = adForm.querySelector('.ad-form__reset');
   const onButtonResetClick = (evt) => {
     evt.preventDefault();
-    window.map.closeCard();
-    window.pin.deletePins();
-    map.classList.add('map--faded');
-    adForm.reset();
-    disableForm();
-    mapPinMain.style.left = mapPinMainDefaultX + 'px';
-    mapPinMain.style.top = mapPinMainDefaultY + 'px';
-    mapPinMain.addEventListener('mousedown', window.onPinMainClick);
-    mapPinMain.addEventListener('keydown', window.onPinMainPress);
+    window.page.resetPage();
     buttonReset.removeEventListener('click', onButtonResetClick);
   };
-
-  buttonReset.addEventListener('click', onButtonResetClick);
 
   window.form = {
     getAdressPin,
