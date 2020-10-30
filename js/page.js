@@ -31,29 +31,19 @@
     mapPinMain.addEventListener('keydown', window.map.onPinMainPress);
   };
 
-  let pinsArray = [];
+  let filteredPins = [];
 
   const onDataLoadSuccess = (pins) => {
     window.pin.renderPins(pins);
 
-    pinsArray = pins;
+    window.page.filteredPins = pins;
 
     mapPins.addEventListener('click', (evt) => {
       window.map.onPinPress(evt, pins);
     });
   };
 
-  const onFilterInputChange = () => {
-    window.map.closeCard();
-    window.pin.deletePins();
-    window.pin.renderPins(window.sort.filterHousingType(pinsArray));
-  };
-
-  const housingType = document.querySelector('#housing-type');
-
-  housingType.addEventListener('change', onFilterInputChange);
-
-  const onDataLoadError = function (errorMessage) {
+  const onDataLoadError = (errorMessage) => {
     const node = document.createElement('div');
     node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
     node.style.position = 'absolute';
@@ -66,6 +56,7 @@
 
   window.page = {
     activatePage,
-    resetPage
+    resetPage,
+    filteredPins
   };
 })();
