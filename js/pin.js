@@ -3,6 +3,7 @@
 (() => {
   const PIN_WIDTH = 50;
   const PIN_HEIGHT = 70;
+  const PINS_QUANTITY_MAX = 5;
   const mapPins = document.querySelector('.map__pins');
   const mapPin = document.querySelector('#pin').content.querySelector('.map__pin');
 
@@ -19,7 +20,8 @@
 
   const renderPins = (pins) => {
     const pinFragment = document.createDocumentFragment();
-    for (let i = 0; i < pins.length; i++) {
+    let pinsAmount = (PINS_QUANTITY_MAX < pins.length) ? PINS_QUANTITY_MAX : pins.length;
+    for (let i = 0; i < pinsAmount; i++) {
       if (pins[i].offer) {
         pinFragment.appendChild(renderPin(pins[i]));
       }

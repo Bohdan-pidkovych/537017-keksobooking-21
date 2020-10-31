@@ -40,11 +40,11 @@
     }
   };
 
-  const onPinPress = (evt, pins) => {
+  const onPinPress = (evt) => {
     let target = evt.target;
     let button = target.closest('.map__pin');
     if (button && !button.classList.contains('map__pin--main')) {
-      openCard(pins, button);
+      openCard(window.filter.filteredOffers, button);
       button.classList.add('map__pin--active');
     }
   };

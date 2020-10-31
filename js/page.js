@@ -6,10 +6,12 @@
   const mapPins = document.querySelector('.map__pins');
   const mapPinMain = mapPins.querySelector('.map__pin--main');
   const adForm = document.querySelector('.ad-form');
+  const mapFilter = map.querySelector('.map__filters');
   const mapPinMainDefaultCoords = {
     x: mapPinMain.offsetLeft,
     y: mapPinMain.offsetTop
   };
+  let offers = [];
 
   const activatePage = () => {
     map.classList.remove('map--faded');
@@ -23,23 +25,26 @@
     window.map.closeCard();
     window.pin.deletePins();
     map.classList.add('map--faded');
+    mapFilter.reset();
     adForm.reset();
     mapPinMain.style.left = mapPinMainDefaultCoords.x + 'px';
     mapPinMain.style.top = mapPinMainDefaultCoords.y + 'px';
     window.form.disableForm();
     mapPinMain.addEventListener('mousedown', window.map.onPinMainClick);
     mapPinMain.addEventListener('keydown', window.map.onPinMainPress);
+    mapPins.removeEventListener('click', window.map.onPinPress);
   };
 
-  const onDataLoadSuccess = (pins) => {
-    window.pin.renderPins(pins);
+  const onDataLoadSuccess = (data) => {
+    window.pin.renderPins(data);
 
-    mapPins.addEventListener('click', (evt) => {
-      window.map.onPinPress(evt, pins);
-    });
+    window.page.offers = data;
+    window.filter.filteredOffers = data;
+
+    mapPins.addEventListener('click', window.map.onPinPress);
   };
 
-  const onDataLoadError = function (errorMessage) {
+  const onDataLoadError = (errorMessage) => {
     const node = document.createElement('div');
     node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
     node.style.position = 'absolute';
@@ -52,6 +57,7 @@
 
   window.page = {
     activatePage,
-    resetPage
+    resetPage,
+    offers
   };
 })();
