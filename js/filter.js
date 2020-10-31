@@ -2,6 +2,7 @@
 
 (() => {
   const housingType = document.querySelector('#housing-type');
+  let filteredOffers = [];
 
   const filterHousingType = (pins) => {
     let selectedType = housingType.value;
@@ -14,23 +15,16 @@
     });
   };
 
-  let newPinsArray = [];
-
   const onFilterInputChange = () => {
     window.map.closeCard();
     window.pin.deletePins();
-    window.filter.newPinsArray = filterHousingType(window.page.filteredPins);
-    window.pin.renderPins(window.filter.newPinsArray);
-
-    const mapPins = document.querySelector('.map__pins');
-    mapPins.addEventListener('click', (evt) => {
-      window.map.onPinPress(evt, window.filter.newPinsArray);
-    });
+    window.filter.filteredOffers = filterHousingType(window.page.offers);
+    window.pin.renderPins(window.filter.filteredOffers);
   };
 
   housingType.addEventListener('change', onFilterInputChange);
 
   window.filter = {
-    newPinsArray
+    filteredOffers
   };
 })();
