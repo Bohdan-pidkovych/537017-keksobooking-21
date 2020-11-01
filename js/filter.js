@@ -11,65 +11,55 @@
   const HIGH_PRICE = 50000;
   let filteredOffers = [];
 
-  const filterType = (suggestion) => {
-    if (housingType.value !== 'any') {
-      return suggestion.offer.type === housingType.value;
-    }
-    return true;
+  const filterType = (advert) => {
+    return (housingType.value !== 'any') ? advert.offer.type === housingType.value : true;
   };
 
-  const filterPrice = function (suggestion) {
-    if (housingPrice.value === 'any') {
-      return true;
+  const filterPrice = (advert) => {
+    switch (housingPrice.value) {
+      case 'any':
+        return true;
+      case 'low':
+        return advert.offer.price < LOW_PRICE;
+      case 'middle':
+        return advert.offer.price >= LOW_PRICE && advert.offer.price <= HIGH_PRICE;
+      case 'high':
+        return advert.offer.price > HIGH_PRICE;
+      default:
+        return false;
     }
-    if (housingPrice.value === 'low') {
-      return suggestion.offer.price < LOW_PRICE;
-    }
-    if (housingPrice.value === 'middle') {
-      return suggestion.offer.price > LOW_PRICE && suggestion.offer.price < HIGH_PRICE;
-    }
-    return suggestion.offer.price > HIGH_PRICE;
   };
 
-  const filterRooms = (suggestion) => {
-    if (housingRooms.value !== 'any') {
-      return suggestion.offer.rooms.toString() === housingRooms.value;
-    }
-    return true;
+  const filterRooms = (advert) => {
+    return (housingRooms.value !== 'any') ? advert.offer.rooms.toString() === housingRooms.value : true;
   };
 
-  const filterGuests = (suggestion) => {
-    if (housingGuests.value !== 'any') {
-      return suggestion.offer.guests.toString() === housingGuests.value;
-    }
-    return true;
+  const filterGuests = (advert) => {
+    return (housingGuests.value !== 'any') ? advert.offer.guests.toString() === housingGuests.value : true;
   };
 
-  const filterFeatures = (suggestion) => {
+  const filterFeatures = (advert) => {
     const chosenFeatures = housingFeatures.querySelectorAll('.map__checkbox:checked');
 
     return Array.from(chosenFeatures).every((chosenFeature) => {
-      return suggestion.offer.features.includes(chosenFeature.value);
+      return advert.offer.features.includes(chosenFeature.value);
     });
   };
 
-  const filterOffers = (suggestions) => {
-    suggestions.forEach((suggestion) => {
-      if (filterType(suggestion) && filterPrice(suggestion) && filterRooms(suggestion) && filterGuests(suggestion) && filterFeatures(suggestion)) {
-        filteredOffers.push(suggestion);
-      }
+  const filterOffers = (adverts) => {
+    return adverts.filter((advert) => {
+      return filterType(advert) && filterPrice(advert) && filterRooms(advert) && filterGuests(advert) && filterFeatures(advert);
     });
-    return filteredOffers;
   };
 
-  const onFilterInputChange = window.debounce(() => {
+  const onFilterInputChange = () => {
     window.map.closeCard();
     window.pin.deletePins();
     window.filter.filteredOffers = filterOffers(window.page.offers);
     window.pin.renderPins(window.filter.filteredOffers);
-  });
+  };
 
-  mapFilter.addEventListener('change', onFilterInputChange);
+  mapFilter.addEventListener('change', window.debounce(onFilterInputChange));
 
   window.filter = {
     filteredOffers
