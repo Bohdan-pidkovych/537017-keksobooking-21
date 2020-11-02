@@ -19,6 +19,8 @@ const priceInput = adForm.querySelector('#price');
 const timeInInput = adForm.querySelector('#timein');
 const timeOutInput = adForm.querySelector('#timeout');
 const buttonReset = adForm.querySelector('.ad-form__reset');
+const successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
+const errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
 
 const getAdressPin = (pinWidth, pinHeight) => {
   const locationX = mapPinMain.offsetLeft + pinWidth;
@@ -93,7 +95,6 @@ timeInInput.addEventListener('change', onTimeInputChange);
 timeOutInput.addEventListener('change', onTimeInputChange);
 
 const showSuccessMessage = () => {
-  const successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
   const successMessage = successMessageTemplate.cloneNode(true);
   document.querySelector('main').insertAdjacentElement('afterbegin', successMessage);
   document.addEventListener('click', hideSuccessMessage);
@@ -108,7 +109,6 @@ const hideSuccessMessage = () => {
 };
 
 const showErrorMessage = () => {
-  const errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
   const errorMessage = errorMessageTemplate.cloneNode(true);
   document.querySelector('main').insertAdjacentElement('afterbegin', errorMessage);
   errorMessage.querySelector('.error__button').addEventListener('click', hideErrorMessage);
