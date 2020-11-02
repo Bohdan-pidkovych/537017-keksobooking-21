@@ -19,10 +19,6 @@ const priceInput = adForm.querySelector('#price');
 const timeInInput = adForm.querySelector('#timein');
 const timeOutInput = adForm.querySelector('#timeout');
 const buttonReset = adForm.querySelector('.ad-form__reset');
-const successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
-const successMessage = successMessageTemplate.cloneNode(true);
-const errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
-const errorMessage = errorMessageTemplate.cloneNode(true);
 
 const getAdressPin = (pinWidth, pinHeight) => {
   const locationX = mapPinMain.offsetLeft + pinWidth;
@@ -71,6 +67,7 @@ const compareRoomsCapacity = () => {
 roomsInput.addEventListener('change', () => {
   compareRoomsCapacity();
 });
+
 capacityInput.addEventListener('change', () => {
   compareRoomsCapacity();
 });
@@ -96,43 +93,46 @@ timeInInput.addEventListener('change', onTimeInputChange);
 timeOutInput.addEventListener('change', onTimeInputChange);
 
 const showSuccessMessage = () => {
+  const successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
+  const successMessage = successMessageTemplate.cloneNode(true);
   document.querySelector('main').insertAdjacentElement('afterbegin', successMessage);
-
   document.addEventListener('click', hideSuccessMessage);
   document.addEventListener('keydown', onMessageEscPress);
 };
 
 const hideSuccessMessage = () => {
+  const successMessage = document.querySelector('.success');
   successMessage.remove();
-
   document.removeEventListener('click', hideSuccessMessage);
   document.removeEventListener('keydown', onMessageEscPress);
 };
 
 const showErrorMessage = () => {
+  const errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
+  const errorMessage = errorMessageTemplate.cloneNode(true);
   document.querySelector('main').insertAdjacentElement('afterbegin', errorMessage);
-
   errorMessage.querySelector('.error__button').addEventListener('click', hideErrorMessage);
   document.addEventListener('click', hideErrorMessage);
   document.addEventListener('keydown', onMessageEscPress);
 };
 
 const hideErrorMessage = () => {
+  const errorMessage = document.querySelector('.error');
   errorMessage.remove();
-
   errorMessage.querySelector('.error__button').removeEventListener('click', hideErrorMessage);
   document.removeEventListener('click', hideErrorMessage);
   document.removeEventListener('keydown', onMessageEscPress);
 };
 
 const onMessageEscPress = (evt) => {
+  const successMessage = document.querySelector('.success');
+  const errorMessage = document.querySelector('.error');
   if (evt.key === 'Escape') {
     evt.preventDefault();
     if (successMessage) {
       successMessage.remove();
       document.removeEventListener('click', hideSuccessMessage);
-    }
-    if (errorMessage) {
+    } else {
       errorMessage.remove();
       document.removeEventListener('click', hideErrorMessage);
       errorMessage.querySelector('.error__button').removeEventListener('click', hideErrorMessage);

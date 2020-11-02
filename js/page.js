@@ -36,10 +36,8 @@ const resetPage = () => {
 
 const onDataLoadSuccess = (data) => {
   window.pin.renderPins(data);
-
   window.page.offers = data;
   window.filter.filteredOffers = data;
-
   mapPins.addEventListener('click', window.map.onPinPress);
 };
 
