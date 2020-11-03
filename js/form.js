@@ -94,60 +94,49 @@ const onTimeInputChange = (evt) => {
 timeInInput.addEventListener('change', onTimeInputChange);
 timeOutInput.addEventListener('change', onTimeInputChange);
 
-const showSuccessMessage = () => {
-  const successMessage = successMessageTemplate.cloneNode(true);
-  document.querySelector('main').insertAdjacentElement('afterbegin', successMessage);
-  document.addEventListener('click', hideSuccessMessage);
+const showMessage = (template) => {
+  const message = template.cloneNode(true);
+  document.querySelector('main').insertAdjacentElement('afterbegin', message);
+  document.addEventListener('click', hideMessage);
   document.addEventListener('keydown', onMessageEscPress);
+
+  if (template === errorMessageTemplate) {
+    message.querySelector('.error__button').addEventListener('click', hideMessage);
+    message.tabindex = 0;
+    message.focus();
+  }
 };
 
-const hideSuccessMessage = () => {
-  const successMessage = document.querySelector('.success');
-  successMessage.remove();
-  document.removeEventListener('click', hideSuccessMessage);
-  document.removeEventListener('keydown', onMessageEscPress);
-};
-
-const showErrorMessage = () => {
-  const errorMessage = errorMessageTemplate.cloneNode(true);
-  document.querySelector('main').insertAdjacentElement('afterbegin', errorMessage);
-  errorMessage.querySelector('.error__button').addEventListener('click', hideErrorMessage);
-  document.addEventListener('click', hideErrorMessage);
-  document.addEventListener('keydown', onMessageEscPress);
-};
-
-const hideErrorMessage = () => {
-  const errorMessage = document.querySelector('.error');
-  errorMessage.remove();
-  errorMessage.querySelector('.error__button').removeEventListener('click', hideErrorMessage);
-  document.removeEventListener('click', hideErrorMessage);
+const hideMessage = () => {
+  const message = document.querySelector('.success') || document.querySelector('.error');
+  if (message.classList.contains('error')) {
+    message.querySelector('.error__button').removeEventListener('click', hideMessage);
+  }
+  message.remove();
+  document.removeEventListener('click', hideMessage);
   document.removeEventListener('keydown', onMessageEscPress);
 };
 
 const onMessageEscPress = (evt) => {
-  const successMessage = document.querySelector('.success');
-  const errorMessage = document.querySelector('.error');
+  const message = document.querySelector('.success') || document.querySelector('.error');
   if (evt.key === 'Escape') {
     evt.preventDefault();
-    if (successMessage) {
-      successMessage.remove();
-      document.removeEventListener('click', hideSuccessMessage);
-    } else {
-      errorMessage.remove();
-      document.removeEventListener('click', hideErrorMessage);
-      errorMessage.querySelector('.error__button').removeEventListener('click', hideErrorMessage);
+    if (message.classList.contains('error')) {
+      message.querySelector('.error__button').removeEventListener('click', hideMessage);
     }
+    message.remove();
+    document.removeEventListener('click', hideMessage);
     document.removeEventListener('keydown', onMessageEscPress);
   }
 };
 
 const onFormSuccessSubmit = () => {
   window.page.resetPage();
-  showSuccessMessage();
+  showMessage(successMessageTemplate);
 };
 
 const onFormErrorSubmit = () => {
-  showErrorMessage();
+  showMessage(errorMessageTemplate);
 };
 
 adForm.addEventListener('submit', (evt) => {
