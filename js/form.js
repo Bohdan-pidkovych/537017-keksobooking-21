@@ -99,19 +99,10 @@ const showMessage = (template) => {
   document.querySelector('main').insertAdjacentElement('afterbegin', message);
   document.addEventListener('click', hideMessage);
   document.addEventListener('keydown', onMessageEscPress);
-
-  if (template === errorMessageTemplate) {
-    message.querySelector('.error__button').addEventListener('click', hideMessage);
-    message.tabindex = 0;
-    message.focus();
-  }
 };
 
 const hideMessage = () => {
   const message = document.querySelector('.success') || document.querySelector('.error');
-  if (message.classList.contains('error')) {
-    message.querySelector('.error__button').removeEventListener('click', hideMessage);
-  }
   message.remove();
   document.removeEventListener('click', hideMessage);
   document.removeEventListener('keydown', onMessageEscPress);
@@ -121,9 +112,6 @@ const onMessageEscPress = (evt) => {
   const message = document.querySelector('.success') || document.querySelector('.error');
   if (evt.key === 'Escape') {
     evt.preventDefault();
-    if (message.classList.contains('error')) {
-      message.querySelector('.error__button').removeEventListener('click', hideMessage);
-    }
     message.remove();
     document.removeEventListener('click', hideMessage);
     document.removeEventListener('keydown', onMessageEscPress);
@@ -137,6 +125,9 @@ const onFormSuccessSubmit = () => {
 
 const onFormErrorSubmit = () => {
   showMessage(errorMessageTemplate);
+  const message = document.querySelector('.error');
+  message.tabindex = 0;
+  message.focus();
 };
 
 adForm.addEventListener('submit', (evt) => {

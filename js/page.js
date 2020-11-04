@@ -6,6 +6,8 @@ const mapPins = document.querySelector('.map__pins');
 const mapPinMain = mapPins.querySelector('.map__pin--main');
 const adForm = document.querySelector('.ad-form');
 const mapFilter = map.querySelector('.map__filters');
+const defaultAvatar = adForm.querySelector('.ad-form-header__preview img').src;
+const defaultPreview = adForm.querySelector('.ad-form__photo').innerHTML;
 const mapPinMainDefaultCoords = {
   x: mapPinMain.offsetLeft,
   y: mapPinMain.offsetTop
@@ -26,6 +28,8 @@ const resetPage = () => {
   map.classList.add('map--faded');
   mapFilter.reset();
   adForm.reset();
+  adForm.querySelector('.ad-form-header__preview img').src = defaultAvatar;
+  adForm.querySelector('.ad-form__photo').innerHTML = defaultPreview;
   mapPinMain.style.left = mapPinMainDefaultCoords.x + 'px';
   mapPinMain.style.top = mapPinMainDefaultCoords.y + 'px';
   window.form.disableForm();

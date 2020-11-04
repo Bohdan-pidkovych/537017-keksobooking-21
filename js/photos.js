@@ -39,6 +39,7 @@ photoInput.addEventListener('change', (() => {
     reader.addEventListener('load', () => {
       const photoPreview = document.createElement('img');
       photoPreview.src = reader.result;
+      photoPreview.alt = 'Фото жилья';
       photoPreview.width = '70';
       photoPreview.height = '70';
       photoPreviewContainer.appendChild(photoPreview);
