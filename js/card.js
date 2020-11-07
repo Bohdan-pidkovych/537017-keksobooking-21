@@ -1,13 +1,12 @@
 'use strict';
 
-const map = document.querySelector(`.map`);
 const appartmentType = {
   palace: `Дворец`,
   flat: `Квартира`,
   house: `Дом`,
   bungalow: `Бунгало`
 };
-
+const map = document.querySelector(`.map`);
 const mapFiltersContainer = document.querySelector(`.map__filters-container`);
 const mapCardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
 

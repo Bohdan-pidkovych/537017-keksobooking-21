@@ -5,11 +5,11 @@ const mapPins = document.querySelector(`.map__pins`);
 const mapPinMain = mapPins.querySelector(`.map__pin--main`);
 
 const openCard = (pins, button) => {
-  const pinsArray = mapPins.querySelectorAll(`.map__pin:not(:first-of-type)`);
+  const advertPins = mapPins.querySelectorAll(`.map__pin:not(:first-of-type)`);
 
   closeCard();
-  for (let i = 0; i < pinsArray.length; i++) {
-    if (pinsArray[i] === button) {
+  for (let i = 0; i < advertPins.length; i++) {
+    if (advertPins[i] === button) {
       window.card.renderCard(pins[i]);
     }
   }

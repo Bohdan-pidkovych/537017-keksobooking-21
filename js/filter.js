@@ -1,13 +1,13 @@
 'use strict';
 
+const LOW_PRICE = 10000;
+const HIGH_PRICE = 50000;
 const mapFilter = document.querySelector(`.map__filters`);
 const housingType = document.querySelector(`#housing-type`);
 const housingPrice = document.querySelector(`#housing-price`);
 const housingRooms = document.querySelector(`#housing-rooms`);
 const housingGuests = document.querySelector(`#housing-guests`);
 const housingFeatures = document.querySelector(`#housing-features`);
-const LOW_PRICE = 10000;
-const HIGH_PRICE = 50000;
 let filteredOffers = [];
 
 const filterType = (advert) => {

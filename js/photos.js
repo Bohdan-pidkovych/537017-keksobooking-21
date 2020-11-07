@@ -1,6 +1,8 @@
 'use strict';
 
 const FILE_TYPES = [`jpg`, `jpeg`, `png`, `gif`];
+const PHOTO_PREVIEW_WIDTH = `70`;
+const PHOTO_PREVIEW_HEIGHT = `70`;
 const avatarInput = document.querySelector(`#avatar`);
 const photoInput = document.querySelector(`#images`);
 const avatarPreviewContainer = document.querySelector(`.ad-form-header__preview`);
@@ -40,8 +42,8 @@ photoInput.addEventListener(`change`, (() => {
       const photoPreview = document.createElement(`img`);
       photoPreview.src = reader.result;
       photoPreview.alt = `Фото жилья`;
-      photoPreview.width = `70`;
-      photoPreview.height = `70`;
+      photoPreview.width = PHOTO_PREVIEW_WIDTH;
+      photoPreview.height = PHOTO_PREVIEW_HEIGHT;
       photoPreviewContainer.appendChild(photoPreview);
     });
 
