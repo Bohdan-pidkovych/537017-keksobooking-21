@@ -13,17 +13,17 @@ const mapPinMainDefaultCoords = {
 };
 let offers = [];
 
-const activatePage = () => {
+const activate = () => {
   map.classList.remove(`map--faded`);
-  window.form.enableForm();
+  window.form.enable();
   mapPinMain.removeEventListener(`mousedown`, window.map.onPinMainClick);
   mapPinMain.removeEventListener(`keydown`, window.map.onPinMainPress);
   window.backend.load(`GET`, URL_LOAD, onDataLoadSuccess, onDataLoadError);
 };
 
-const resetPage = () => {
+const reset = () => {
   window.map.closeCard();
-  window.pin.deletePins();
+  window.pin.deleteList();
   map.classList.add(`map--faded`);
   mapFilter.reset();
   adForm.reset();
@@ -31,16 +31,16 @@ const resetPage = () => {
   adForm.querySelector(`.ad-form__photo`).innerHTML = ``;
   mapPinMain.style.left = mapPinMainDefaultCoords.x + `px`;
   mapPinMain.style.top = mapPinMainDefaultCoords.y + `px`;
-  window.form.disableForm();
+  window.form.disable();
   mapPinMain.addEventListener(`mousedown`, window.map.onPinMainClick);
   mapPinMain.addEventListener(`keydown`, window.map.onPinMainPress);
   mapPins.removeEventListener(`click`, window.map.onPinPress);
 };
 
 const onDataLoadSuccess = (data) => {
-  window.pin.renderPins(data);
+  window.pin.renderList(data);
   window.page.offers = data;
-  window.filter.filteredOffers = data;
+  window.filter.ads = data;
   mapPins.addEventListener(`click`, window.map.onPinPress);
 };
 
@@ -56,7 +56,7 @@ const onDataLoadError = (errorMessage) => {
 };
 
 window.page = {
-  activatePage,
-  resetPage,
+  activate,
+  reset,
   offers
 };

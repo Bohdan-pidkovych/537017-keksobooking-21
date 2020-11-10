@@ -1,5 +1,6 @@
 'use strict';
 
+const ESCAPE_BUTTON = `Escape`;
 const URL_SAVE = `https://21.javascript.pages.academy/keksobooking`;
 const AppartmentPrice = {
   BUNGALOW: `0`,
@@ -28,7 +29,7 @@ const getAdressPin = (pinWidth, pinHeight) => {
   return `${locationX}, ${locationY}`;
 };
 
-const disableForm = () => {
+const disable = () => {
   adForm.classList.add(`ad-form--disabled`);
 
   for (let i = 0; i < formsFieldsets.length; i++) {
@@ -38,7 +39,7 @@ const disableForm = () => {
   addressInput.value = getAdressPin(window.constants.PIN_MAIN_WIDTH / 2, window.constants.PIN_MAIN_HEIGHT / 2);
 };
 
-const enableForm = () => {
+const enable = () => {
   adForm.classList.remove(`ad-form--disabled`);
 
   for (let i = 0; i < formsFieldsets.length; i++) {
@@ -78,8 +79,8 @@ const coordinateTypePrice = (select, input) => {
   const options = select.options;
   const selectedIndex = options.selectedIndex;
   const valueOption = options[selectedIndex].value;
-  input.setAttribute(`placeholder`, AppartmentPrice[valueOption.toUpperCase()]);
-  input.setAttribute(`min`, AppartmentPrice[valueOption.toUpperCase()]);
+  input.placeholder = AppartmentPrice[valueOption.toUpperCase()];
+  input.min = AppartmentPrice[valueOption.toUpperCase()];
 };
 
 typeInput.addEventListener(`change`, () => {
@@ -109,14 +110,14 @@ const onMessageHide = () => {
 };
 
 const onMessageEscPress = (evt) => {
-  if (evt.key === `Escape`) {
+  if (evt.key === ESCAPE_BUTTON) {
     evt.preventDefault();
     onMessageHide();
   }
 };
 
 const onFormSuccessSubmit = () => {
-  window.page.resetPage();
+  window.page.reset();
   showMessage(successMessageTemplate);
 };
 
@@ -134,12 +135,12 @@ adForm.addEventListener(`submit`, (evt) => {
 
 const onButtonResetClick = (evt) => {
   evt.preventDefault();
-  window.page.resetPage();
+  window.page.reset();
   buttonReset.removeEventListener(`click`, onButtonResetClick);
 };
 
 window.form = {
   getAdressPin,
-  enableForm,
-  disableForm
+  enable,
+  disable
 };

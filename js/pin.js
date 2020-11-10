@@ -6,7 +6,7 @@ const PINS_QUANTITY_MAX = 5;
 const mapPins = document.querySelector(`.map__pins`);
 const mapPin = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
 
-const renderPin = (element) => {
+const render = (element) => {
   const pinElement = mapPin.cloneNode(true);
 
   pinElement.style.left = `${element.location.x - PIN_WIDTH / 2}px`;
@@ -17,29 +17,29 @@ const renderPin = (element) => {
   return pinElement;
 };
 
-const renderPins = (pins) => {
+const renderList = (pins) => {
   const pinFragment = document.createDocumentFragment();
   let pinsAmount = PINS_QUANTITY_MAX < pins.length ? PINS_QUANTITY_MAX : pins.length;
   for (let i = 0; i < pinsAmount; i++) {
     if (pins[i].offer) {
-      pinFragment.appendChild(renderPin(pins[i]));
+      pinFragment.appendChild(render(pins[i]));
     }
   }
 
   mapPins.appendChild(pinFragment);
 };
 
-const deletePins = () => {
+const deleteList = () => {
   const pins = mapPins.querySelectorAll(`.map__pin`);
 
-  for (let i = 0; i < pins.length; i++) {
-    if (!pins[i].classList.contains(`map__pin--main`)) {
-      pins[i].remove();
+  pins.forEach((pin) => {
+    if (!pin.classList.contains(`map__pin--main`)) {
+      pin.remove();
     }
-  }
+  });
 };
 
 window.pin = {
-  renderPins,
-  deletePins
+  renderList,
+  deleteList
 };

@@ -1,3 +1,3 @@
 'use strict';
 
-window.form.disableForm();
+window.form.disable();
